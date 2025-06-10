@@ -111,6 +111,8 @@ def extract_message(df, location):
     def single_day_message(day, hours):
         for _, loc in day.groupby("location"):
             time_windowed_max = filter_time_window_max(loc.drop(columns="location"), hours=hours)
+            if not len(time_windowed_max):
+                continue
             diff = compress_to_diff(time_windowed_max)
             messages.append(format_string(diff))
 

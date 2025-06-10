@@ -1,22 +1,21 @@
-import argparse
-
 import forecast
+import garmin
+
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "location",
-        help="Name of location in the configured coordinates."
-    )
-    args = parser.parse_args()
-    responses = forecast.request_forecast(args.location)
-    cct = forecast.concat(responses)
-    message = forecast.extract_message(cct, args.location)
+    lat, lon = garmin.get_inreach_position()
+    loc = garmin.get_forecast_location(lat, lon)
 
-    print(message[:140])
+    if loc:
+        responses = forecast.request_forecast(loc)
+        cct = forecast.concat(responses)
+        message = forecast.extract_message(cct, loc)
+        length = len(message)
 
-    length = len(message)
-    if length > 140:
-        print(f"\n Truncated {message[140:]}")
-    else:
-        print(f"Message length: {length}")
+        full_message = "\n".join([
+            message[:140],
+            f"Message length: {length}",
+            f"Truncated: {message[140:]}"
+        ])
+
+        garmin.send_email("forecast test", full_message)
