@@ -21,4 +21,4 @@ if __name__ == "__main__":
         ])
 
         garmin.send_email("forecast test", full_message)
-        garmin.send_browser(message[TRUNCATE])
+        garmin.send_browser(message[:TRUNCATE])
