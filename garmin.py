@@ -2,6 +2,8 @@ from email.mime.text import MIMEText
 import requests
 from retry_requests import retry
 import smtplib
+from selenium import webdriver
+from selenium.webdriver.common.by import By
 
 from coordinates import BOUNDS
 
@@ -32,6 +34,17 @@ def get_forecast_location(latitude, longitude):
             in_bounds = location
             break
     return in_bounds
+
+
+def send_browser(message):
+    driver = webdriver.Firefox()
+    try:
+        driver.get("https://explore.garmin.com/textmessage/txtmsg?extId=08dda88a-739f-4e7c-6045-bd79bc110000&adr=wikidev%40gmail.com")
+        driver.set_window_size(1440, 900)
+        driver.find_element(By.ID, "ReplyMessage").send_keys(message)
+        driver.find_element(By.ID, "sendBtn").click()
+    finally:
+        driver.quit()
 
 
 def send_email(subject, body, recipients=RECIPIENTS, sender=SENDER, password=PASSWORD):

@@ -2,6 +2,8 @@ import forecast
 import garmin
 
 
+TRUNCATE = 160
+
 if __name__ == "__main__":
     lat, lon = garmin.get_inreach_position()
     loc = garmin.get_forecast_location(lat, lon)
@@ -13,9 +15,10 @@ if __name__ == "__main__":
         length = len(message)
 
         full_message = "\n".join([
-            message[:140],
+            message[:TRUNCATE],
             f"Message length: {length}",
-            f"Truncated: {message[140:]}"
+            f"Truncated: {message[TRUNCATE:]}"
         ])
 
         garmin.send_email("forecast test", full_message)
+        garmin.send_browser(message[TRUNCATE])

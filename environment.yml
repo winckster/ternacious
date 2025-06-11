@@ -10,3 +10,4 @@ dependencies:
     - pandas==2.3.0
     - requests==2.32.3
     - retry-requests==2.0.0
+    - selenium==4.33.0
