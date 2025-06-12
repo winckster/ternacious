@@ -1,5 +1,6 @@
 from email.mime.text import MIMEText
 import requests
+import retry
 from retry_requests import retry
 import smtplib
 from selenium import webdriver
@@ -35,20 +36,23 @@ def get_forecast_location(latitude, longitude):
             break
     return in_bounds
 
+@retry(tries=5, delay=2, backoff=4)
+# Retry after 2, 8, 32, 128 seconds
+def _submit_form(driver, message):
+    driver.get("https://explore.garmin.com/textmessage/txtmsg?extId=08dda88a-739f-4e7c-6045-bd79bc110000&adr=wikidev%40gmail.com")
+    driver.set_window_size(1920, 1080)
+    driver.find_element(By.ID, "ReplyMessage").send_keys(message)
+    driver.find_element(By.ID, "sendBtn").click()
 
 def send_browser(message):
 
     options = webdriver.FirefoxOptions()
     options.add_argument("-headless")
-
     driver = webdriver.Firefox(options=options)
     try:
-        driver.get("https://explore.garmin.com/textmessage/txtmsg?extId=08dda88a-739f-4e7c-6045-bd79bc110000&adr=wikidev%40gmail.com")
-        driver.find_element(By.ID, "ReplyMessage").send_keys(message)
-        driver.find_element(By.ID, "sendBtn").click()
+        _submit_form(driver, message)
     finally:
         driver.quit()
-
 
 def send_email(subject, body, recipients=RECIPIENTS, sender=SENDER, password=PASSWORD):
     msg = MIMEText(body)
