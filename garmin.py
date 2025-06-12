@@ -8,7 +8,7 @@ from selenium.webdriver.common.by import By
 
 from coordinates import BOUNDS
 
-from config import GARMIN_USER_NAME, GARMIN_USER_ID, SENDER, RECIPIENTS, PASSWORD
+from config import GARMIN_USER_NAME, GARMIN_USER_ID, SENDER, RECIPIENTS, PASSWORD, GARMIN_MESSAGE_ID, GARMIN_EMAIL
 
 
 def get_inreach_position():
@@ -39,7 +39,7 @@ def get_forecast_location(latitude, longitude):
 @retry(tries=5, delay=2, backoff=4)
 # Retry after 2, 8, 32, 128 seconds
 def _submit_form(driver, message):
-    driver.get("https://explore.garmin.com/textmessage/txtmsg?extId=08dda88a-739f-4e7c-6045-bd79bc110000&adr=wikidev%40gmail.com")
+    driver.get("https://explore.garmin.com/textmessage/txtmsg?extId={GARMIN_MESSAGE_ID}={GARMIN_EMAIL}")
     driver.set_window_size(1920, 1080)
     driver.find_element(By.ID, "ReplyMessage").send_keys(message)
     driver.find_element(By.ID, "sendBtn").click()
