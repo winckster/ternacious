@@ -1,7 +1,7 @@
 from email.mime.text import MIMEText
 import requests
 from retry import retry
-from retry_requests import retry
+from retry_requests import retry as retry_request
 import smtplib
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -12,7 +12,7 @@ from config import GARMIN_USER_NAME, GARMIN_USER_ID, SENDER, RECIPIENTS, PASSWOR
 
 
 def get_inreach_position():
-    session = retry(requests.Session(), retries=5, backoff_factor=0.2)
+    session = retry_request(requests.Session(), retries=5, backoff_factor=0.2)
     res = session.get(f"https://share.garmin.com/{GARMIN_USER_NAME}/Map/Messages/?userId={GARMIN_USER_ID}&typeRestriction=1&units=2")
     res.raise_for_status()
     messages = res.json()["Messages"]

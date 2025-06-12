@@ -5,7 +5,7 @@ import warnings
 import openmeteo_requests
 import pandas as pd
 import requests
-from retry_requests import retry
+from retry_requests import retry as retry_request
 
 from coordinates import LOCATIONS
 
@@ -27,7 +27,7 @@ def request_forecast(location):
     # Observations are assimilated every 6 hours (00, 06, 12, 18 UTC) with a 7-hour observation cut-off to ensure real-time updates.
     # https://docs.therisk.global/nexus-initiatives/heatwaves-prediction/appendix-a-data-source/numerical-deterministic/hrdps
 
-    retry_session = retry(requests.Session(), retries=5, backoff_factor=0.2)
+    retry_session = retry_request(requests.Session(), retries=5, backoff_factor=0.2)
     openmeteo = openmeteo_requests.Client(session=retry_session)
 
     loc = LOCATIONS[location]
