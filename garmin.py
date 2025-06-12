@@ -1,6 +1,6 @@
 from email.mime.text import MIMEText
 import requests
-import retry
+from retry import retry
 from retry_requests import retry
 import smtplib
 from selenium import webdriver
@@ -45,7 +45,6 @@ def _submit_form(driver, message):
     driver.find_element(By.ID, "sendBtn").click()
 
 def send_browser(message):
-
     options = webdriver.FirefoxOptions()
     options.add_argument("-headless")
     driver = webdriver.Firefox(options=options)
