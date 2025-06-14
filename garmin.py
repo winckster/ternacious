@@ -36,8 +36,8 @@ def get_forecast_location(latitude, longitude):
             break
     return in_bounds
 
-@retry(tries=5, delay=2, backoff=4)
-# Retry after 2, 8, 32, 128 seconds
+@retry(tries=5, delay=30, backoff=4)
+# Retry after 30, 120, 480, 1920 seconds
 def _submit_form(driver, message):
     driver.get(f"https://explore.garmin.com/textmessage/txtmsg?extId={GARMIN_MESSAGE_ID}&adr={GARMIN_EMAIL}")
     driver.set_window_size(1920, 1080)
